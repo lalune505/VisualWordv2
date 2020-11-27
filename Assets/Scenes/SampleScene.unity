@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 431082831}
   - component: {fileID: 431082832}
   m_Layer: 0
-  m_Name: Test
+  m_Name: WordTranscriber
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

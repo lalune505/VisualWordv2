@@ -4,11 +4,16 @@ using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
 
-public class Module : MonoBehaviour
+public class WordTranscriber : MonoBehaviour
 {
     private void Start()
     {
-        Debug.Log(new Phonetic("дом", 1).get_phonetic());
+        Debug.Log(GetWordTranscription("землетрясение", 4));
+    }
+
+    public string GetWordTranscription(string word, int shock)
+    {
+        return new Phonetic(word,shock).get_phonetic( false).ToString();
     }
 }
 public class Phonetic
@@ -124,9 +129,9 @@ public class Phonetic
         return syll_counter;
     }
 
-    public string get_phonetic()
+    public object get_phonetic(bool return_letter_tuple)
     {
-        var _sounds = new List<Letter>();
+        var letters = new List<Letter>();
         Letter _last_let = null;
         var syll_counter = 0;
         foreach (var s in __work_word) {
@@ -138,39 +143,44 @@ public class Phonetic
                 }
             }
             var let = new Letter(s.ToString(), _last_let, is_shock);
-            _sounds.Add(let);
+            letters.Add(let);
             _last_let = let;
             
         }
-        _sounds.Last().initialize_as_end();
-        
-         return String.Join("",_sounds.Select( x => x.get_sound()).ToArray());
+        letters.Last().initialize_as_end();
+
+        var sounds = letters.Select(x => x.get_sound()).ToList();
+        if (return_letter_tuple)
+        {
+            return sounds;
+        }
+        return String.Join("",sounds);
     }
 }
 
 public class Letter
 {
-    public string _letter = null;
-    public Letter _prev_letter = null;
-    public int _sonority_level = 0;
-    public bool _forced_hard = false;
-    public bool _forsed_sonorus = false;
-    public bool _forced_not_show = false;
-    public bool _is_double = false;
-    public bool _is_shock = false;
+    private string _letter = null;
+    private Letter _prev_letter = null;
+    private int _sonority_level = 0;
+    private bool? _forced_hard = null;
+    private bool? _forsed_sonorus = null;
+    private bool _forced_not_show = false;
+    private bool _is_double = false;
+    private bool _is_shock = false;
     private bool _last_letter = false;
-    
-    public string vowels = "аеёиоуыэюя";  // Гласные буквы
-    public string consonants = "бвгджзйклмнпрстфхцчшщ";  // Согласные буквы
-    public string marks = "ъь";  // Знаки
 
-    public string forever_hard = "жшц";  // Всегда твёрдые.
-    public string forever_soft = "йчщ"; // Всегда мягкие.
+    private string vowels = "аеёиоуыэюя";  // Гласные буквы
+    private string consonants = "бвгджзйклмнпрстфхцчшщ";  // Согласные буквы
+    private string marks = "ъь";  // Знаки
 
-    public string vovels_set_hard = "аоуыэ";  // Делают предыдущую согласную твёрдой.
-    public string vovels_set_soft = "еёиюя"; // Делают предыдущую согласную мягкой.
-    
-    public Dictionary<string, string> ioted_vowels = new Dictionary<string, string> {
+    private string forever_hard = "жшц";  // Всегда твёрдые.
+    private string forever_soft = "йчщ"; // Всегда мягкие.
+
+    private string vovels_set_hard = "аоуыэ";  // Делают предыдущую согласную твёрдой.
+    private string vovels_set_soft = "еёиюя"; // Делают предыдущую согласную мягкой.
+
+    private Dictionary<string, string> ioted_vowels = new Dictionary<string, string> {
         {
             "е",
             "э"},
@@ -183,12 +193,12 @@ public class Letter
         {
             "я",
             "а"}};
-            
-    public string forever_sonorus = "йлмнр";
-            
-    public string forever_deaf = "xцчщ";
-            
-    public List<(string, string)> sonorus_deaf_pairs =  new List<(string, string)>{("б", "п"), ("в", "ф"), ("г", "к"), ("д", "т"), ("ж", "ш"), ("з", "с")};
+
+    private string forever_sonorus = "йлмнр";
+
+    private string forever_deaf = "xцчщ";
+
+    private List<(string, string)> sonorus_deaf_pairs =  new List<(string, string)>{("б", "п"), ("в", "ф"), ("г", "к"), ("д", "т"), ("ж", "ш"), ("з", "с")};
 
     public Letter(string letter, Letter prev_letter = null, bool shock = false)
     {
@@ -307,7 +317,7 @@ public class Letter
         }
         var snd = this._get_sound();
         if (this._is_double && this.is_after_acc()) {
-            snd += ":";
+            //snd += ":"; //двоеточие 
         }
         return snd;
     }
@@ -375,7 +385,7 @@ public class Letter
         this.set_prev_sonorus();
     }
 
-    public string letter()
+    private string letter()
     {
         return this._letter;
     }
@@ -403,7 +413,8 @@ public class Letter
     {
         return this._prev_letter;
     }
-    public string get_variant(bool return_deaf) {
+
+    private string get_variant(bool return_deaf) {
         
         foreach (var variants in this.sonorus_deaf_pairs) {
             if (variants.Item1 == this.letter()|| variants.Item2 == this.letter())
@@ -413,7 +424,8 @@ public class Letter
         }
         return this.letter();
     }
-    public bool is_paired_consonant() {
+
+    private bool is_paired_consonant() {
         if (!this.is_consonant()) {
             return false;
         }
@@ -429,7 +441,7 @@ public class Letter
     // 
     //         Звонкая ли согласная.
     //         
-    public bool is_sonorus() {
+    private bool is_sonorus() {
         if (!this.is_consonant()) {
             return false;
         }
@@ -439,10 +451,10 @@ public class Letter
         if (this.forever_deaf.Contains(this.letter())) {
             return false;
         }
-        if (this._forsed_sonorus) {
+        if (this._forsed_sonorus != null) {
             return true;
         }
-        if (!_forsed_sonorus) {
+        if (this._forsed_sonorus == false) {
             return false;
         }
         foreach (var _tup_1 in this.sonorus_deaf_pairs) {
@@ -454,7 +466,7 @@ public class Letter
         return false;
     }
 
-    public bool is_deaf() {
+    private bool is_deaf() {
         if (!this.is_consonant()) {
             return false;
         }
@@ -464,10 +476,10 @@ public class Letter
         if (this.forever_sonorus.Contains(this.letter())) {
             return false;
         }
-        if (this._forsed_sonorus) {
+        if (this._forsed_sonorus != null) {
             return false;
         }
-        if (!this._forsed_sonorus) {
+        if (this._forsed_sonorus == false) {
             return true;
         }
         foreach (var tup1 in this.sonorus_deaf_pairs) {
@@ -488,13 +500,13 @@ public class Letter
         if (this.forever_soft.Contains(this.letter())) {
             return false;
         }
-        if (this._forced_hard) {
+        if (this._forced_hard != null) {
             return true;
         }
         return false;
     }
-            
-    public bool is_soft() {
+
+    private bool is_soft() {
         if (!this.is_consonant()) {
             return false;
         }
@@ -504,7 +516,7 @@ public class Letter
         if (this.forever_hard.Contains(this.letter())) {
             return false;
         }
-        if (!_forced_hard) {
+        if (this._forced_hard == false) {
             return true;
         }
         return false;
@@ -514,7 +526,7 @@ public class Letter
     //         Проверяет, заканчивается ли последовательность букв переданной строкой.
     //         Скан производится, без учёта текущей.
     //         
-    public bool end(string s) {
+    private bool end(string s) {
         var prev = this.prev_letter();
         foreach (char i in new string(s.Reverse().ToArray())) {
             if (!prev.letter().Equals(i.ToString())) {
@@ -527,8 +539,8 @@ public class Letter
         }
         return true;
     }
-    
-    public bool is_softener(Letter let) {
+
+    private bool is_softener(Letter let) {
         if (let.forever_hard.Contains(let.letter())) {
             return false;
         }
@@ -552,20 +564,20 @@ public class Letter
         return false;
     }
 
-    public bool is_vowel() {
+    private bool is_vowel() {
         return this.vowels.Contains(this.letter());
     }
 
-    public bool is_consonant()
+    private bool is_consonant()
     {
         return this.consonants.Contains(this.letter());
     }
-    
-    public bool is_mark() {
+
+    private bool is_mark() {
         return this.marks.Contains(this.letter());
     }
-            
-    public bool is_shock() {
+
+    private bool is_shock() {
         return this._is_shock;
     }
 
