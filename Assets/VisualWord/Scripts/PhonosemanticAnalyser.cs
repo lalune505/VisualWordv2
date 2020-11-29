@@ -175,10 +175,10 @@ public class PhonosemanticAnalyser : MonoBehaviour
         
         CountPhonosemanticFeatures(GetWordTranscription(word, shock));
         
-        rend.material.SetFloat("_Size", Mathf.Lerp(4.5f, 0f, GetSlowness() / 5f));
+        rend.material.SetFloat("_Size", Mathf.Lerp(4.0f, 0f, GetSlowness() / 5f));
         rend.material.SetFloat("_Frequency", Mathf.Lerp(0, 8f, GetRoundness() / 5f));
         rend.material.SetFloat("_Glossiness", Mathf.Lerp(1f, 0f, GetSmoothness() / 5f) );
-        rend.material.SetColor("_Color", Color.Lerp(new Color(0.6f,0.0f, 1f), new Color(0.79f,0.64f, 0.9f),GetBrightness() / 5f));
+        rend.material.SetColor("_Color", Color.Lerp(new Color(0.34f,0.0f, 1f), new Color(0.79f,0.85f, 0.9f),GetBrightness() / 5f));
         rend.material.SetFloat("_Metallic", Mathf.Lerp(0f, 1f, GetDarkness()/ 5f));
 
         var s = Mathf.Lerp(2, 0f, GetSmallness() / 5f);
@@ -194,6 +194,25 @@ public class PhonosemanticAnalyser : MonoBehaviour
 
     private void Start()
     {
-        SetFeatures("рэйчик", 1);
+        var tuple = GetFormatedInput(SceneLoader.instance.GetCurrentInput(), ";");
+        Debug.Log((tuple.Item1, tuple.Item2.ToString()));
+        SetFeatures(tuple.Item1, tuple.Item2);
+    }
+    
+    public static Tuple<string, int> GetFormatedInput(string text, string stopAt = ";")
+    {
+        if (!String.IsNullOrWhiteSpace(text))
+        {
+            int charLocation = text.IndexOf(stopAt, StringComparison.Ordinal);
+
+            Debug.Log(charLocation);
+            if (charLocation > 0)
+            {
+                return new Tuple<string, int>(text.Substring(0, charLocation),
+                    Int32.Parse(text.Substring(charLocation + 1, text.Length - charLocation - 1)));
+            }
+        }
+
+        return new Tuple<string, int>(String.Empty, 0);
     }
 }
