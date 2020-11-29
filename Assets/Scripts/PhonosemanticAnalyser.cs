@@ -51,12 +51,29 @@ public class PhonosemanticAnalyser : MonoBehaviour
         3.5, 3.6
     };
 
+    private double[] _fastSlowFeatures = new[]
+    {
+        0.0, 3.4, 3.8, 3.7, 3.6, 3.6, 4.3, 4.4, 3.7, 3.6, 3.2, 1.9, 2.2, 2.4, 3.0, 2.2, 2.4, 2.4, 4.2, 3.4, 2.7, 3.0, 1.8,
+        2.0, 1.9, 3.5, 3.0, 3.7, 3.4, 3.9, 3.4, 1.9, 2.4, 2.7, 2.4, 3.0, 3.1, 2.0, 2.5, 3.4, 3.7, 3.7, 3.5, 2.3, 2.0,
+        3.1, 3.8
+    };
+
+    private double[] _lightDarkFeatures = new[]
+    {
+        0.0, 2.2, 1.9, 2.5, 2.0, 2.2, 3.6, 3.8, 2.5, 2.3, 1.9, 3.2, 2.6, 3.9, 2.8, 3.3, 2.9, 3.2, 2.2, 3.8, 2.5, 2.8, 2.6,
+        3.6, 3.2, 3.1, 2.0, 3.3, 2.6, 3.1, 2.8, 4.0, 3.3, 3.8, 2.9, 2.5, 2.4, 4.0, 3.6, 4.0, 3.7, 4.4, 3.5, 3.5, 3.3,
+        4.3, 3.8
+    };
+
     private List<int> _currentSoundsIndexes = new List<int>();
     private double _currentMaxFreq = 0.0;
     private double _k = 0.0;
     private double _smoothness = 0.0;
     private double _roundness = 0.0;
     private double _brightness = 0.0;
+    private double _darkness = 0.0;
+    private double _slowness = 0.0;
+    private double _smallness = 0.0f;
 
     private List<int> FindSoundsIndexes(string[] sounds)
     {
@@ -95,49 +112,88 @@ public class PhonosemanticAnalyser : MonoBehaviour
             var fiRoughFeature = _smoothRoughFeatures[_currentSoundsIndexes[i]];
             var fiAngularFeature = _roundAngularFeatures[_currentSoundsIndexes[i]];
             var fiBrightnessFeature = _brightDimFeatures[_currentSoundsIndexes[i]];
+            var fiFastSlowFeature = _fastSlowFeatures[_currentSoundsIndexes[i]];
+            var fiLightDarkFeature = _lightDarkFeatures[_currentSoundsIndexes[i]];
+            var fiSmallBigFeature = _bigSmallFeatures[_currentSoundsIndexes[i]];
             
             _smoothness += fiRoughFeature * ki;
             _roundness += fiAngularFeature * ki;
             _brightness += fiBrightnessFeature * ki;
+            _slowness += fiFastSlowFeature * ki;
+            _darkness += fiLightDarkFeature * ki;
+            _smallness += fiSmallBigFeature * ki;
         }
 
-        _smoothness = _smoothness / _k;
-        _roundness = _roundness / _k;
-        _brightness = _brightness / _k;
+        _smoothness /= _k;
+        _roundness /= _k;
+        _brightness /= _k;
+        _slowness /= _k;
+        _darkness /= _k;
+        _smallness /= _k;
     }
 
-    public float GetSmoothness()
+    private float GetSmoothness()
     {
         Debug.Log(_smoothness);
         return (float)_smoothness;
     }
-    
-    public float GetRoundness()
+
+    private float GetRoundness()
     {
         Debug.Log(_roundness);
         return (float)_roundness;
     }
 
-    public float GetBrightness()
+    private float GetBrightness()
     {
         Debug.Log(_brightness);
         return (float)_brightness;
     }
 
-    void Start()
+    private float GetDarkness()
     {
+        Debug.Log(_darkness);
+        return (float) _darkness;
+    }
 
-        CountPhonosemanticFeatures(GetWordTranscription("шуршуршшущ", 2));
+    private float GetSlowness()
+    {
+        Debug.Log(_slowness);
+        return (float) _slowness;
+    }
 
+    private float GetSmallness()
+    {
+        Debug.Log(_smallness);
+        return (float) _smallness;
+    }
+
+    void SetFeatures(string word, int shock)
+    {
         rend = this.gameObject.GetComponent<Renderer>();
-        rend.material.SetFloat("_Size", Mathf.Lerp(0, 4f, GetRoundness() / 5f));
-        rend.material.SetFloat("_Frequency", Mathf.Lerp(0, 8f, GetSmoothness() / 5f));
+        rend.enabled = false;
+        
+        CountPhonosemanticFeatures(GetWordTranscription(word, shock));
+        
+        rend.material.SetFloat("_Size", Mathf.Lerp(4.5f, 0f, GetSlowness() / 5f));
+        rend.material.SetFloat("_Frequency", Mathf.Lerp(0, 8f, GetRoundness() / 5f));
+        rend.material.SetFloat("_Glossiness", Mathf.Lerp(1f, 0f, GetSmoothness() / 5f) );
         rend.material.SetColor("_Color", Color.Lerp(new Color(0.6f,0.0f, 1f), new Color(0.79f,0.64f, 0.9f),GetBrightness() / 5f));
+        rend.material.SetFloat("_Metallic", Mathf.Lerp(0f, 1f, GetDarkness()/ 5f));
+
+        var s = Mathf.Lerp(2, 0f, GetSmallness() / 5f);
+        gameObject.transform.localScale = new Vector3(s,s,s);
+
+        rend.enabled = true;
     }
 
     private Tuple<string[], int> GetWordTranscription(string word, int shock)
     {
         return new WordTranscriber.Phonetic(word, shock).get_phonetic();
     }
-    
+
+    private void Start()
+    {
+       // SetFeatures("элина", 2);
+    }
 }
