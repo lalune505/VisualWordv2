@@ -194,6 +194,6 @@ public class PhonosemanticAnalyser : MonoBehaviour
 
     private void Start()
     {
-       // SetFeatures("элина", 2);
+        SetFeatures("рэйчик", 1);
     }
 }
