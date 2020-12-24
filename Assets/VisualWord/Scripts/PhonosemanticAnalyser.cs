@@ -3,10 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using UnityEditor;
 using UnityEngine;
 
 public class PhonosemanticAnalyser : MonoBehaviour
 {
+    [SerializeField] private Color colorStartNotBright;
+    [SerializeField] private Color colorEndBright;
     Renderer rend;
     private string[] _soundLetterSignificance = new[]
     {
@@ -178,7 +181,7 @@ public class PhonosemanticAnalyser : MonoBehaviour
         rend.material.SetFloat("_Size", Mathf.Lerp(4.0f, 0f, GetSlowness() / 5f));
         rend.material.SetFloat("_Frequency", Mathf.Lerp(0, 8f, GetRoundness() / 5f));
         rend.material.SetFloat("_Glossiness", Mathf.Lerp(1f, 0f, GetSmoothness() / 5f) );
-        rend.material.SetColor("_Color", Color.Lerp(new Color(0.34f,0.0f, 1f), new Color(0.79f,0.85f, 0.9f),GetBrightness() / 5f));
+        rend.material.SetColor("_Color", Color.Lerp(colorStartNotBright, colorEndBright,GetBrightness() / 5f));
         rend.material.SetFloat("_Metallic", Mathf.Lerp(0f, 1f, GetDarkness()/ 5f));
 
         var s = Mathf.Lerp(2, 0f, GetSmallness() / 5f);
