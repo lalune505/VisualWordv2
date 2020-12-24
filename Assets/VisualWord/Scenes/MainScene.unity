@@ -303,6 +303,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5981960093116151795, guid: 453cf6de3ccd54f49add4019d909ff09,
+        type: 3}
+      propertyPath: colorEndBright.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981960093116151795, guid: 453cf6de3ccd54f49add4019d909ff09,
+        type: 3}
+      propertyPath: colorEndBright.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981960093116151795, guid: 453cf6de3ccd54f49add4019d909ff09,
+        type: 3}
+      propertyPath: colorEndBright.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981960093116151795, guid: 453cf6de3ccd54f49add4019d909ff09,
+        type: 3}
+      propertyPath: colorEndBright.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981960093116151795, guid: 453cf6de3ccd54f49add4019d909ff09,
+        type: 3}
+      propertyPath: colorStartNotBright.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6092957428100723206, guid: 453cf6de3ccd54f49add4019d909ff09,
         type: 3}
       propertyPath: m_LocalPosition.x
