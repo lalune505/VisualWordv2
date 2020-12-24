@@ -306,17 +306,17 @@ PrefabInstance:
     - target: {fileID: 5981960093116151795, guid: 453cf6de3ccd54f49add4019d909ff09,
         type: 3}
       propertyPath: colorEndBright.r
-      value: 1
+      value: 0.9339623
       objectReference: {fileID: 0}
     - target: {fileID: 5981960093116151795, guid: 453cf6de3ccd54f49add4019d909ff09,
         type: 3}
       propertyPath: colorEndBright.g
-      value: 1
+      value: 0.4801976
       objectReference: {fileID: 0}
     - target: {fileID: 5981960093116151795, guid: 453cf6de3ccd54f49add4019d909ff09,
         type: 3}
       propertyPath: colorEndBright.b
-      value: 1
+      value: 0.9213344
       objectReference: {fileID: 0}
     - target: {fileID: 5981960093116151795, guid: 453cf6de3ccd54f49add4019d909ff09,
         type: 3}
@@ -327,6 +327,21 @@ PrefabInstance:
         type: 3}
       propertyPath: colorStartNotBright.a
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981960093116151795, guid: 453cf6de3ccd54f49add4019d909ff09,
+        type: 3}
+      propertyPath: colorStartNotBright.r
+      value: 0.5377358
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981960093116151795, guid: 453cf6de3ccd54f49add4019d909ff09,
+        type: 3}
+      propertyPath: colorStartNotBright.g
+      value: 0.5377358
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981960093116151795, guid: 453cf6de3ccd54f49add4019d909ff09,
+        type: 3}
+      propertyPath: colorStartNotBright.b
+      value: 0.5377358
       objectReference: {fileID: 0}
     - target: {fileID: 6092957428100723206, guid: 453cf6de3ccd54f49add4019d909ff09,
         type: 3}
