@@ -226,7 +226,7 @@ public class PhonosemanticAnalyser : MonoBehaviour
         rend.material.SetFloat("_Size", Mathf.Lerp(4.0f, 0f, GetSlowness() / 5f));
         rend.material.SetFloat("_Frequency", Mathf.Lerp(0, 8f, GetRoundness() / 5f));
         rend.material.SetFloat("_Glossiness", Mathf.Lerp(1f, 0f, GetSmoothness() / 5f) );
-        rend.material.SetColor("_Color", Color.Lerp(colorStartNotBright, colorEndBright,GetBrightness() / 5f));
+        rend.material.SetColor("_Color", colorStartNotBright);//Color.Lerp(colorStartNotBright, colorEndBright,GetBrightness() / 5f));
         rend.material.SetFloat("_Metallic", Mathf.Lerp(0f, 1f, GetDarkness()/ 5f));
 
         var s = Mathf.Lerp(2, 0f, GetSmallness() / 5f);

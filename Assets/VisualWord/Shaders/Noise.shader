@@ -3,10 +3,19 @@
     Properties
     {
         _Color ("Color", Color) = (1,1,1,1)
+        _MaxColor ("Color in Maxmal", Color) = (0, 0, 0, 0)
+        _MinDistance ("Min Distance", Float) = 100
+        _MaxDistance ("Max Distance", Float) = 1000      
+        
+        _RimColor ("Rim Color", Color) = (0.26,0.19,0.16,0.0)
+      	_RimPower ("Rim Power", Range(0.5,8.0)) = 3.0
+        
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
-
+        _Emission("Emission", float) = 0
+        _EmissionColor("Color", Color) = (0,0,0)
+        _Cube ("Cubemap", CUBE) = "" {}
         _Frequency("Wave Freqency", Range(1, 8)) = 2
         _Size("Wave Size", Range(0, 5)) = 1
     }
@@ -29,13 +38,28 @@
         {
             float2 uv_MainTex;
             float3 worldPos;
+            float3 worldRefl;
+            
+            float3 screenPos; 
+            
+            float3 viewDir;
         };
 
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
+        samplerCUBE _Cube;
+        float _Emission;
+        fixed4 _EmissionColor;
+        
+        float _MaxDistance;
+        float _MinDistance;
+        float4 _MaxColor;
 
         float _Frequency, _Size;
+        
+        float4 _RimColor;
+        float _RimPower;
 
         // classic perlin noise
         float3 mod289(float3 x)
@@ -155,13 +179,19 @@
         UNITY_INSTANCING_BUFFER_START(Props)
             // put more per-instance properties here
         UNITY_INSTANCING_BUFFER_END(Props)
-
+       
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
+            half4 dist = IN.worldPos.y;
+            half4 weight =  (dist - _MinDistance) / (_MaxDistance - _MinDistance);
+            half4 distanceColor = lerp(_Color, _MaxColor, weight);
             // Albedo comes from a texture tinted by color
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-            o.Albedo = c.rgb;
+            o.Albedo = c.rgb * distanceColor.rgb;//c.rgb;
             // Metallic and smoothness come from slider variables
+            //o.Emission = c.rgb * tex2D(_MainTex, IN.uv_MainTex).a * _Emission * _EmissionColor;//texCUBE (_Cube, IN.worldRefl).rgb;
+            half rim = 1.0 - saturate ( dot (normalize( IN.viewDir), o.Normal));
+   		    o.Emission = _RimColor.rgb * pow (rim, _RimPower);
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
             o.Alpha = c.a;
