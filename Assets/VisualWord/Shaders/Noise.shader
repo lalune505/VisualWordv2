@@ -181,7 +181,7 @@
        
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            float dist = IN.worldPos.y;
+            half4 dist = IN.worldPos.y;
             half4 weight =  (dist - _MinDistance) / (_MaxDistance - _MinDistance);
             half4 distanceColor = lerp(_Color, _MaxColor, weight );
             // Albedo comes from a texture tinted by color
