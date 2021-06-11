@@ -68,9 +68,9 @@ Material:
     - _Dist: 0
     - _DstBlend: 0
     - _Emission: 0.79
-    - _Frequency: 4.57
+    - _Frequency: 3.83
     - _GlossMapScale: 1
-    - _Glossiness: 0.406
+    - _Glossiness: 0.548
     - _GlossyReflections: 1
     - _MaxDistance: 1
     - _Metallic: 0.587
@@ -78,17 +78,17 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _RimPower: 3
-    - _Size: 0.77
+    - _RimPower: 2.42
+    - _Size: 1.06
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _Speed: 1.11
+    - _Speed: 0.77
     - _SrcBlend: 1
     - _UVSec: 0
-    - _Weight: -2.4
+    - _Weight: -10
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.9254902, g: 0.90588236, b: 0.41568628, a: 1}
+    - _Color: {r: 0.2627451, g: 0.2627451, b: 0.2627451, a: 1}
     - _EmissionColor: {r: 0.8584906, g: 0.125534, b: 0.125534, a: 1}
-    - _MaxColor: {r: 0.65882355, g: 0.007843138, b: 0.007843138, a: 1}
-    - _RimColor: {r: 0, g: 0, b: 0, a: 0.6509804}
+    - _MaxColor: {r: 0.10980392, g: 0.85882354, b: 0.5882353, a: 1}
+    - _RimColor: {r: 0.056255702, g: 0.44, b: 0.30136985, a: 0.6509804}
