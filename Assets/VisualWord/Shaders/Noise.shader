@@ -9,15 +9,14 @@
         
         _RimColor ("Rim Color", Color) = (0.26,0.19,0.16,0.0)
       	_RimPower ("Rim Power", Range(0.5,8.0)) = 3.0
-        
+        _Weight ("Weight", Range(-10.0,10.0)) = 0.0
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
-        _Emission("Emission", float) = 0
-        _EmissionColor("Color", Color) = (0,0,0)
-        _Cube ("Cubemap", CUBE) = "" {}
         _Frequency("Wave Freqency", Range(1, 8)) = 2
+        _Speed ("Speed", Range(0,5)) = 1
         _Size("Wave Size", Range(0, 5)) = 1
+   
     }
     SubShader
     {
@@ -51,12 +50,12 @@
         samplerCUBE _Cube;
         float _Emission;
         fixed4 _EmissionColor;
-        
+        float _Weight;
         float _MaxDistance;
         float _MinDistance;
         float4 _MaxColor;
 
-        float _Frequency, _Size;
+        float _Frequency, _Size, _Speed;
         
         float4 _RimColor;
         float _RimPower;
@@ -145,7 +144,7 @@
         
         float ApplyNoise(float3 p) {
             //float3 displacement = _Size * cnoise(1.3 * (sin(_Time.y * .5) + 2.) * p + _Time.y);
-            float displacement = _Size * cnoise(_Frequency * p + _Time.y);
+            float displacement = _Size * cnoise(_Frequency * p + _Time.y * _Speed);
             return displacement;
         }
 
@@ -182,16 +181,15 @@
        
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            half4 dist = IN.worldPos.y;
+            float dist = IN.worldPos.y;
             half4 weight =  (dist - _MinDistance) / (_MaxDistance - _MinDistance);
-            half4 distanceColor = lerp(_Color, _MaxColor, weight);
+            half4 distanceColor = lerp(_Color, _MaxColor, weight );
             // Albedo comes from a texture tinted by color
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
             o.Albedo = c.rgb * distanceColor.rgb;//c.rgb;
-            // Metallic and smoothness come from slider variables
-            //o.Emission = c.rgb * tex2D(_MainTex, IN.uv_MainTex).a * _Emission * _EmissionColor;//texCUBE (_Cube, IN.worldRefl).rgb;
             half rim = 1.0 - saturate ( dot (normalize( IN.viewDir), o.Normal));
    		    o.Emission = _RimColor.rgb * pow (rim, _RimPower);
+            // Metallic and smoothness come from slider variables
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
             o.Alpha = c.a;

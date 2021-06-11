@@ -65,27 +65,30 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
+    - _Dist: 0
     - _DstBlend: 0
-    - _Emission: 1.01
-    - _Frequency: 3.2428699
+    - _Emission: 0.79
+    - _Frequency: 4.57
     - _GlossMapScale: 1
-    - _Glossiness: 0.5612144
+    - _Glossiness: 0.406
     - _GlossyReflections: 1
     - _MaxDistance: 1
-    - _Metallic: 0.49220747
+    - _Metallic: 0.587
     - _MinDistance: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _RimPower: 2.06
-    - _Size: 1.0727332
+    - _RimPower: 3
+    - _Size: 0.77
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _Speed: 1.11
     - _SrcBlend: 1
     - _UVSec: 0
+    - _Weight: -2.4
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.21176471, g: 0.8862745, b: 0.6431373, a: 0.023529412}
-    - _EmissionColor: {r: 0.1509434, g: 0.081879675, b: 0.081879675, a: 1}
-    - _MaxColor: {r: 0.8396226, g: 0.1544589, b: 0.81885225, a: 0}
-    - _RimColor: {r: 0.2031417, g: 0.7830189, b: 0.7830189, a: 0.83137256}
+    - _Color: {r: 0.9254902, g: 0.90588236, b: 0.41568628, a: 1}
+    - _EmissionColor: {r: 0.8584906, g: 0.125534, b: 0.125534, a: 1}
+    - _MaxColor: {r: 0.65882355, g: 0.007843138, b: 0.007843138, a: 1}
+    - _RimColor: {r: 0, g: 0, b: 0, a: 0.6509804}
