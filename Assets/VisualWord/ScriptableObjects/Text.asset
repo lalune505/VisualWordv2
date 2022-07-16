@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a39c4b1790acd43b28f0fdc817c278f3, type: 3}
+  m_Name: Text
+  m_EditorClassIdentifier: 
+  text:
+  - size: 2.2445107
+    scale: 0.9080968
+    color: {r: 0.14925243, g: 0.3725383, b: 0.8113208, a: 1}
+    rimColor: {r: 0.28400528, g: 0.04688766, b: 0.04688766, a: 1}
+    maxColor: {r: 0.5566038, g: 0.09189212, b: 0.09189212, a: 1}
+    speed: 0.9623708
+    frequency: 2.7829063
+    glossiness: 0.5253057
+    metalness: 0.589658
+  - size: 1.3896737
+    scale: 1.2385347
+    color: {r: 0.26415092, g: 0.2629049, b: 0.2629049, a: 1}
+    rimColor: {r: 0.063434355, g: 0.384231, b: 0.30305865, a: 1}
+    maxColor: {r: 0.13550194, g: 0.8207547, b: 0.6473627, a: 1}
+    speed: 0.6538051
+    frequency: 2.232007
+    glossiness: 0.6415155
+    metalness: 0.53929424

@@ -8,9 +8,12 @@ using UnityEngine;
 
 public class PhonosemanticAnalyser : MonoBehaviour
 {
+    [SerializeField] private VisualText visualText;
+    [SerializeField] private List<string> words = new List<string>();
     [SerializeField] private Color[] vowelsColors;
-    [SerializeField] private Dictionary<float, Color> colors = new Dictionary<float, Color>();
-    Renderer rend;
+    
+    private Dictionary<float, Color> _colors = new Dictionary<float, Color>();
+    
     private string[] _soundLetterSignificance = new[]
     {
         "А", "Е", "Ё", "И", "О", "У", "Ы", "Э", "Ю", "Я", "Б", "Б'", "В", "В'", "Г", "Г'", "Д", "Д'", "Ж", "З", "З'",
@@ -151,6 +154,9 @@ public class PhonosemanticAnalyser : MonoBehaviour
 
     public void CountColorValues()
     {
+        _currentSoundOccurrences = new Dictionary<int, int>();
+        _colors = new Dictionary<float, Color>();
+        
         for (int i = 0; i < _currentSoundsIndexes.Count; i++)
         {
             if (!_currentSoundOccurrences.ContainsKey(_currentSoundsIndexes[i]))
@@ -185,11 +191,11 @@ public class PhonosemanticAnalyser : MonoBehaviour
             float z = ((float)letterOccurrence.Value /  (float)lettersCount - pn) / s;
             if (letterOccurrence.Key < 10)
             {
-                colors.Add(z,vowelsColors[letterOccurrence.Key]);
+                _colors.Add(z,vowelsColors[letterOccurrence.Key]);
             }
         }
 
-        colors = colors.OrderByDescending(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
+        _colors = _colors.OrderByDescending(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
     }
 
     private float GetSmoothness()
@@ -233,27 +239,22 @@ public class PhonosemanticAnalyser : MonoBehaviour
         return (float) _passivness;
     }
 
-    void SetFeatures(string word, int shock)
+    private VisualWord GetVisualWord(string word, int shock)
     {
-        rend = this.gameObject.GetComponent<Renderer>();
-        rend.enabled = false;
-        
         CountPhonosemanticFeatures(GetWordTranscription(word, shock));
         CountColorValues();
         
-        rend.material.SetFloat("_Speed", Mathf.Lerp(2.0f, 0.2f, GetSlowness() / 5f));
-        rend.material.SetFloat("_Size", Mathf.Lerp(4.0f, 0.2f, GetPassivness() / 5f));
-        rend.material.SetFloat("_Frequency", Mathf.Lerp(0.1f, 5f, GetRoundness() / 5f));
-        rend.material.SetFloat("_Glossiness", Mathf.Lerp(1f, 0.2f, GetSmoothness() / 5f) );
-        rend.material.SetColor("_MaxColor", colors.ElementAt(0).Value);
-        rend.material.SetColor("_Color", colors.ElementAt(1).Value);
-        rend.material.SetColor("_RimColor",  Color.Lerp(colors.ElementAt(0).Value,Color.black, GetBrightness() / 5f));
-        rend.material.SetFloat("_Metallic", Mathf.Lerp(0f, 1f, GetDarkness()/ 5f));
-
-        var s = Mathf.Lerp(2, 0f, GetSmallness() / 5f);
-        gameObject.transform.localScale = new Vector3(s,s,s);
-
-        rend.enabled = true;
+        var size = Mathf.Lerp(4.0f, 0.2f, GetPassivness() / 5f);
+        var scale = Mathf.Lerp(2, 0f, GetSmallness() / 5f);
+        var speed = Mathf.Lerp(2.0f, 0.2f, GetSlowness() / 5f);
+        var freq = Mathf.Lerp(0.1f, 5f, GetRoundness() / 5f);
+        var glos = Mathf.Lerp(1f, 0.2f, GetSmoothness() / 5f) ;
+        var maxColor = _colors.ElementAt(0).Value;
+        var color = _colors.Count > 1 ? _colors.ElementAt(1).Value : _colors.ElementAt(0).Value;
+        var rimColor = Color.Lerp(_colors.ElementAt(0).Value,Color.black, GetBrightness() / 5f);
+        var metallic =  Mathf.Lerp(0f, 1f, GetDarkness()/ 5f);
+        
+        return new VisualWord(size, scale, color, rimColor, maxColor, speed, freq, glos, metallic);
     }
 
     private Tuple<string[], int> GetWordTranscription(string word, int shock)
@@ -261,11 +262,13 @@ public class PhonosemanticAnalyser : MonoBehaviour
         return new WordTranscriber.Phonetic(word, shock).get_phonetic();
     }
 
-    private void Start()
+    private void Awake()
     {
-        var tuple = GetFormatedInput(SceneLoader.instance.GetCurrentInput(), ";");
-        Debug.Log((tuple.Item1, tuple.Item2.ToString()));
-        SetFeatures(tuple.Item1, tuple.Item2);
+        foreach (var word in words)
+        {
+            var tuple = GetFormatedInput(word, ";");
+            visualText.AddWord(GetVisualWord(tuple.Item1, tuple.Item2));
+        }
     }
     
     public static Tuple<string, int> GetFormatedInput(string text, string stopAt = ";")
