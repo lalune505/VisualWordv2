@@ -114,8 +114,13 @@ public class PhonosemanticAnalyser : MonoBehaviour
         }
         
         _k = 0;
-        _smoothness = 0;
-        _roundness = 0; 
+        _smoothness = 0.0;
+        _roundness = 0.0;
+        _brightness = 0.0;
+        _darkness = 0.0;
+        _slowness = 0.0;
+        _smallness = 0.0f;
+        _passivness = 0.0f;
         
         for (int i = 0;i < _currentSoundsIndexes.Count;i++)
         {
@@ -264,6 +269,8 @@ public class PhonosemanticAnalyser : MonoBehaviour
 
     private void Awake()
     {
+        visualText.Clear();
+        
         foreach (var word in words)
         {
             var tuple = GetFormatedInput(word, ";");

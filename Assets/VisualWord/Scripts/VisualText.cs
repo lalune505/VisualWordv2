@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,5 +18,9 @@ public class VisualText : ScriptableObject
     {
         text.Add(word);
     }
-    
+
+    public void Clear()
+    {
+        text.Clear();
+    }
 }

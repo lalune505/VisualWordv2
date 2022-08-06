@@ -13,6 +13,15 @@ MonoBehaviour:
   m_Name: Text
   m_EditorClassIdentifier: 
   text:
+  - size: 1.501138
+    scale: 0.7283257
+    color: {r: 0.26415092, g: 0.2629049, b: 0.2629049, a: 1}
+    rimColor: {r: 0.055280983, g: 0.1379829, b: 0.3005017, a: 1}
+    maxColor: {r: 0.14925243, g: 0.3725383, b: 0.8113208, a: 1}
+    speed: 0.89091235
+    frequency: 3.104961
+    glossiness: 0.5151313
+    metalness: 0.5792713
   - size: 2.2445107
     scale: 0.9080968
     color: {r: 0.14925243, g: 0.3725383, b: 0.8113208, a: 1}
@@ -22,12 +31,3 @@ MonoBehaviour:
     frequency: 2.7829063
     glossiness: 0.5253057
     metalness: 0.589658
-  - size: 1.3896737
-    scale: 1.2385347
-    color: {r: 0.26415092, g: 0.2629049, b: 0.2629049, a: 1}
-    rimColor: {r: 0.063434355, g: 0.384231, b: 0.30305865, a: 1}
-    maxColor: {r: 0.13550194, g: 0.8207547, b: 0.6473627, a: 1}
-    speed: 0.6538051
-    frequency: 2.232007
-    glossiness: 0.6415155
-    metalness: 0.53929424
