@@ -261,7 +261,7 @@ public class PhonosemanticAnalyser : MonoBehaviour
         return new WordTranscriber.Phonetic(word, shock).get_phonetic();
     }
 
-    private void Start()
+    private void Awake()
     {
         var tuple = GetFormatedInput(SceneLoader.instance.GetCurrentInput(), ";");
         Debug.Log((tuple.Item1, tuple.Item2.ToString()));
