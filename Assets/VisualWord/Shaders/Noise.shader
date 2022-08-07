@@ -144,7 +144,7 @@
         
         float ApplyNoise(float3 p) {
             //float3 displacement = _Size * cnoise(1.3 * (sin(_Time.y * .5) + 2.) * p + _Time.y);
-            float displacement = _Size * cnoise(_Frequency * p + _Time.y * _Speed);
+            float displacement = _Size * cnoise(_Frequency * p + _Speed);
             return displacement;
         }
 

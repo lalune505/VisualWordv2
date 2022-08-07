@@ -9,6 +9,9 @@ public class VisualWordController : MonoBehaviour
     [SerializeField] private Renderer rend;
     [SerializeField] private VisualText visualText;
 
+    private float _phase;
+    private float _speed;
+
     private void Start()
     {
         SetFeatures(visualText.Text.FirstOrDefault());
@@ -19,8 +22,14 @@ public class VisualWordController : MonoBehaviour
     {
         for (var i = 0; i < visualText.Text.Count - 1; i++)
         {
-            yield return StartCoroutine(LerpFunction(visualText.Text[i+1], 10f));
+            yield return StartCoroutine(LerpFunction(visualText.Text[i+1], 3f));
         }
+    }
+
+    void Update()
+    {
+        _phase += Time.deltaTime * _speed;
+        rend.material.SetFloat("_Speed", _phase);
     }
     IEnumerator LerpFunction(VisualWord endValue, float duration)
     {
@@ -36,7 +45,8 @@ public class VisualWordController : MonoBehaviour
 
     private void SetFeatures(VisualWord visualWord)
     {
-        rend.material.SetFloat("_Speed", visualWord.Speed);
+        //rend.material.SetFloat("_Speed", visualWord.Speed);
+        _speed = visualWord.Speed;
         rend.material.SetFloat("_Size", visualWord.Size);
         rend.material.SetFloat("_Frequency", visualWord.Frequency);
         rend.material.SetFloat("_Glossiness", visualWord.Glossiness);
@@ -84,6 +94,7 @@ public class VisualWordController : MonoBehaviour
     private void Lerp(VisualWord visualWord1, VisualWord visualWord2, float t)
     {
         //rend.material.SetFloat("_Speed", Mathf.Lerp(visualWord1.Speed, visualWord2.Speed, t)); 
+        _speed = Mathf.Lerp(_speed, visualWord2.Speed, t);
         rend.material.SetFloat("_Size", Mathf.Lerp(visualWord1.Size, visualWord2.Size, t));
         rend.material.SetFloat("_Frequency",Mathf.Lerp(visualWord1.Frequency, visualWord2.Frequency, t));
         rend.material.SetFloat("_Glossiness", Mathf.Lerp(visualWord1.Glossiness, visualWord2.Glossiness, t));
