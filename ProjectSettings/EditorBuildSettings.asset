@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/VisualWord/Scenes/MainScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  m_configObjects: {}
+  m_configObjects:
+    UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 0cb725de87e3f4e1f98bdd283da09b64,
+      type: 2}
+    UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: a589ddc9b95b04783bb13b68013ce736,
+      type: 2}
+    com.unity.addressableassets: {fileID: 11400000, guid: fd30cf7030bd342e1b45a869462e0ee0,
+      type: 2}
