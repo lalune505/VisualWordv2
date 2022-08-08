@@ -20,7 +20,7 @@
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "RenderType"="Opaque" "DisableBatching" = "true" }
         LOD 200
 
         CGPROGRAM
@@ -37,6 +37,7 @@
         {
             float2 uv_MainTex;
             float3 worldPos;
+            float3 localPos;
             float3 worldRefl;
             
             float3 screenPos; 
@@ -149,8 +150,11 @@
         }
 
 
-        void vert(inout appdata_full v) {
+        void vert(inout appdata_full v, out Input o) {
 
+            UNITY_INITIALIZE_OUTPUT(Input,o);
+            o.localPos = v.vertex.xyz;
+            
             float3 v0 = v.vertex.xyz;
             float3 bitangent = cross(v.normal, v.tangent.xyz);
             float3 v1 = v0 + (v.tangent.xyz * 0.01);
