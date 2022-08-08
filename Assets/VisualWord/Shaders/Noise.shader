@@ -37,7 +37,6 @@
         {
             float2 uv_MainTex;
             float3 worldPos;
-            float3 localPos;
             float3 worldRefl;
             
             float3 screenPos; 
@@ -150,10 +149,7 @@
         }
 
 
-        void vert(inout appdata_full v, out Input o) {
-
-            UNITY_INITIALIZE_OUTPUT(Input,o);
-            o.localPos = v.vertex.xyz;
+        void vert(inout appdata_full v) {
             
             float3 v0 = v.vertex.xyz;
             float3 bitangent = cross(v.normal, v.tangent.xyz);
@@ -185,7 +181,8 @@
        
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            half4 dist = IN.worldPos.y;
+            float3 localPos = IN.worldPos -  mul(unity_ObjectToWorld, float4(0,0,0,1)).xyz;
+            half4 dist = localPos.y;
             half4 weight =  (dist - _MinDistance) / (_MaxDistance - _MinDistance);
             half4 distanceColor = lerp(_Color, _MaxColor, weight );
             // Albedo comes from a texture tinted by color

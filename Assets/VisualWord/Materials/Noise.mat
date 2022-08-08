@@ -72,9 +72,9 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.548
     - _GlossyReflections: 1
-    - _MaxDistance: 1
+    - _MaxDistance: -0.1
     - _Metallic: 0.587
-    - _MinDistance: 0
+    - _MinDistance: -0.6
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
@@ -90,6 +90,6 @@ Material:
     m_Colors:
     - _Color: {r: 0.14901961, g: 0.37254903, b: 0.8117647, a: 1}
     - _EmissionColor: {r: 0.8584906, g: 0.125534, b: 0.125534, a: 1}
-    - _MaxColor: {r: 0.13725491, g: 0.81960785, b: 0.64705884, a: 1}
-    - _RimColor: {r: 0.056255702, g: 0.44, b: 0.30136985, a: 0.6509804}
+    - _MaxColor: {r: 0.13725491, g: 0.81960785, b: 0.64705884, a: 0.8}
+    - _RimColor: {r: 0.04071733, g: 0.5754717, b: 0.43561283, a: 1}
   m_BuildTextureStacks: []
