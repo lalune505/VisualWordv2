@@ -159,7 +159,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -376,13 +376,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visualText: {fileID: 11400000, guid: 4ce7ac9e96d1e43e0a7ade593c9ae009, type: 2}
-  words:
-  - "\u0442\u044B\u0441\u044F\u0447\u0435\u043B\u0438\u0441\u0442\u043D\u0438\u043A;4"
-  - "\u0432\u0430\u043D\u0430\u0434\u0438\u0439;2"
-  - "\u043A\u0430\u043C\u0435\u043D\u044C;1"
-  - "\u043A\u0440\u043E\u0448\u043A\u0438;1"
-  - "\u043B\u0438\u043A;1"
-  - "\u043B\u0438\u043B\u0438\u044F;1"
+  texts:
+    m_keys:
+    - 
+    - second
+    m_values:
+    - data:
+      - "\u043C\u0430\u0442\u044C;1"
+      - "\u0432\u0430\u043D\u0430\u0434\u0438\u0439;2"
+      - "\u043B\u0438\u043A;1"
+    - data:
+      - "\u0434\u043E\u043C;1"
+      - "\u0430\u043D\u0435\u043C\u043E\u043D\u044B;3"
+      - "\u043A\u0440\u0430\u043F\u0438\u0432\u0430;2"
   vowelsColors:
   - {r: 0.5566038, g: 0.09189212, b: 0.09189212, a: 1}
   - {r: 0.07929868, g: 0.6226415, b: 0.1449055, a: 1}

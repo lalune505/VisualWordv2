@@ -22,7 +22,7 @@ public class VisualWordController : MonoBehaviour
     {
         for (var i = 0; i < visualText.Text.Count - 1; i++)
         {
-            yield return StartCoroutine(LerpFunction(visualText.Text[i+1], 3f));
+            yield return StartCoroutine(LerpFunction(visualText.Text[i+1], 10f));
         }
     }
 

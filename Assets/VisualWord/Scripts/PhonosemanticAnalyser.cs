@@ -9,10 +9,10 @@ using UnityEngine;
 public class PhonosemanticAnalyser : MonoBehaviour
 {
     [SerializeField] private VisualText visualText;
-    [SerializeField] private List<string> words = new List<string>();
+    [SerializeField] private StringListDictionary texts = new StringListDictionary();
     [SerializeField] private Color[] vowelsColors;
     
-    private Dictionary<float, Color> _colors = new Dictionary<float, Color>();
+    private Dictionary<Color, float> _colors = new Dictionary<Color, float>();
     
     private string[] _soundLetterSignificance = new[]
     {
@@ -160,8 +160,7 @@ public class PhonosemanticAnalyser : MonoBehaviour
     public void CountColorValues()
     {
         _currentSoundOccurrences = new Dictionary<int, int>();
-        _colors = new Dictionary<float, Color>();
-        
+
         for (int i = 0; i < _currentSoundsIndexes.Count; i++)
         {
             if (!_currentSoundOccurrences.ContainsKey(_currentSoundsIndexes[i]))
@@ -195,52 +194,44 @@ public class PhonosemanticAnalyser : MonoBehaviour
             float s = Mathf.Sqrt(pn * (1 - pn) / lettersCount);
             float z = ((float)letterOccurrence.Value /  (float)lettersCount - pn) / s;
             if (letterOccurrence.Key < 10)
-            {
-                _colors.Add(z,vowelsColors[letterOccurrence.Key]);
+            { 
+                if (!_colors.ContainsKey(vowelsColors[letterOccurrence.Key]))
+                    _colors.Add(vowelsColors[letterOccurrence.Key],z);
             }
         }
-
-        _colors = _colors.OrderByDescending(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
     }
 
     private float GetSmoothness()
     {
-        Debug.Log(_smoothness);
         return (float)_smoothness;
     }
 
     private float GetRoundness()
     {
-        Debug.Log(_roundness);
         return (float)_roundness;
     }
 
     private float GetBrightness()
     {
-        Debug.Log(_brightness);
         return (float)_brightness;
     }
 
     private float GetDarkness()
     {
-        Debug.Log(_darkness);
         return (float) _darkness;
     }
 
     private float GetSlowness()
     {
-        Debug.Log(_slowness);
         return (float) _slowness;
     }
 
     private float GetSmallness()
     {
-        Debug.Log(_smallness);
         return (float) _smallness;
     }
     private float GetPassivness()
     {
-        Debug.Log(_passivness);
         return (float) _passivness;
     }
 
@@ -254,12 +245,40 @@ public class PhonosemanticAnalyser : MonoBehaviour
         var speed = Mathf.Lerp(2.0f, 0.2f, GetSlowness() / 5f);
         var freq = Mathf.Lerp(0.1f, 5f, GetRoundness() / 5f);
         var glos = Mathf.Lerp(1f, 0.2f, GetSmoothness() / 5f) ;
-        var maxColor = _colors.ElementAt(0).Value;
-        var color = _colors.Count > 1 ? _colors.ElementAt(1).Value : _colors.ElementAt(0).Value;
-        var rimColor = Color.Lerp(_colors.ElementAt(0).Value,Color.black, GetBrightness() / 5f);
+        var maxColor = _colors.ElementAt(0).Key;
+        var color = _colors.Count > 1 ? _colors.ElementAt(1).Key : _colors.ElementAt(0).Key;
+        var rimColor = Color.Lerp(_colors.ElementAt(0).Key,Color.black, GetBrightness() / 5f);
         var metallic =  Mathf.Lerp(0f, 1f, GetDarkness()/ 5f);
         
         return new VisualWord(size, scale, color, rimColor, maxColor, speed, freq, glos, metallic);
+    }
+
+    private VisualWord GetAverageVisualWord(List<VisualWord> visualWords)
+    {
+        var size = 0.0f;
+        var scale = 0.0f;
+        var speed = 0.0f;
+        var freq = 0.0f;
+        var glos = 0.0f;
+        var metallic = 0.0f;
+        
+        var count = visualWords.Count;
+        
+        var maxColor = _colors.ElementAt(0).Key;
+        var color = _colors.Count > 1 ? _colors.ElementAt(1).Key : _colors.ElementAt(0).Key;
+        var rimColor = Color.Lerp(_colors.ElementAt(0).Key,Color.black, GetBrightness() / 5f);
+        
+        foreach (var word in visualWords)
+        {
+            size += word.Size;
+            scale += word.Scale;
+            speed += word.Speed;
+            freq += word.Frequency;
+            glos += word.Glossiness;
+            metallic += word.Metalness;
+        }
+        return new VisualWord(size / count , scale / count, color, rimColor, maxColor,
+            speed / count, freq  / count, glos  / count, metallic  / count);
     }
 
     private Tuple<string[], int> GetWordTranscription(string word, int shock)
@@ -270,11 +289,22 @@ public class PhonosemanticAnalyser : MonoBehaviour
     private void Awake()
     {
         visualText.Clear();
-        
-        foreach (var word in words)
+       
+        foreach (var text in texts)
         {
-            var tuple = GetFormatedInput(word, ";");
-            visualText.AddWord(GetVisualWord(tuple.Item1, tuple.Item2));
+            _colors = new Dictionary<Color, float>();
+            List<VisualWord> result = new List<VisualWord>();
+            
+            foreach (var word in text.Value)
+            {
+                var tuple = GetFormatedInput(word, ";");
+                result.Add(GetVisualWord(tuple.Item1, tuple.Item2));
+            }
+            
+            _colors = _colors.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+        
+            var averageVisualWord = GetAverageVisualWord(result);
+            visualText.AddWord(averageVisualWord);
         }
     }
     
@@ -283,8 +313,7 @@ public class PhonosemanticAnalyser : MonoBehaviour
         if (!String.IsNullOrWhiteSpace(text))
         {
             int charLocation = text.IndexOf(stopAt, StringComparison.Ordinal);
-
-            Debug.Log(charLocation);
+            
             if (charLocation > 0)
             {
                 return new Tuple<string, int>(text.Substring(0, charLocation),
@@ -294,4 +323,11 @@ public class PhonosemanticAnalyser : MonoBehaviour
 
         return new Tuple<string, int>(String.Empty, 0);
     }
+    
 }
+
+[Serializable]
+public class TextListStorage : SerializableDictionary.Storage<List<string>> {}
+
+[Serializable]
+public class StringListDictionary : SerializableDictionary<string, List<string>, TextListStorage> {}
